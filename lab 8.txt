@@ -1,0 +1,132 @@
+create database tuwaiqAcademy;
+
+#tables ==============
+create table student(
+    id int unique primary key ,
+    firstName varchar(10) not null ,
+    midName varchar(10) not null ,
+    lastName varchar(10) not null ,
+    phoneNumber varchar(10) unique not null ,
+    nationality varchar(15) not null ,
+    city varchar(10) not null ,
+    gender varchar(6) check ( gender='male' or gender='female' ),
+    account_State varchar(8) default 'inactive'
+);
+
+create table cv(
+    id int primary key ,
+    educational_Level varchar(10) check ( educational_Level='primary' or educational_Level='middle' or educational_Level='high'
+        or educational_Level='diploma' or educational_Level='bachelors' or educational_Level='masters' or educational_Level = 'doctoral'),
+    experience varchar(30) not null ,
+    skills varchar(20) not null ,
+    languages varchar(20) not null ,
+    training_Certificate varchar(30),
+    student_ID int,
+    foreign key (student_ID) references student(id)
+);
+
+create table instructor(
+    id int primary key ,
+    firstName varchar(10) not null ,
+    midName varchar(10) not null ,
+    lastName varchar(10) not null ,
+    phoneNumber varchar(10) unique not null ,
+    gender varchar(6) check ( gender='male' or gender='female' ),
+    num_of_bootcamps int default 0,
+    career varchar(20) not null
+);
+
+create table class_room(
+    id int primary key ,
+    passage char check ( passage='A' or passage='B' or passage='C'),
+    floor int check ( floor=0 or floor=1),
+    door_num int not null ,
+    capacity int check ( capacity>15 and capacity<30)
+);
+
+create table bootcamps_courses(
+    id int primary key ,
+    location varchar(15) not null ,
+    duration_weeks varchar(10) not null ,
+    hours int not null ,
+    start_Time time not null ,
+    end_Time time not null ,
+    start_Date date not null ,
+    end_Date date not null ,
+    requirement varchar(40) not null ,
+    description varchar(80) not null ,
+    student_ID int ,
+    foreign key (student_ID) references student(id),
+    class_RoomID int,
+    foreign key (class_RoomID) references class_room(id),
+    instructor_ID int ,
+    foreign key (instructor_ID) references instructor(id)
+);
+
+insert into student values (1,'Abdulaziz','Jaber','Alshehri','0554666991','Saudi','Riyadh','male',default);
+insert into student values (2,'Mohammed','Abdullah','Alzhrani','0547382835','Saudi','Jeddah','male',default);
+insert into student values (3,'Abdullah','Ali','Alqarni','0547284652','Saudi','Abha','male',default);
+insert into student values (4,'Sarah','Mohammed','Alghamdi','0556384752','Saudi','Riyadh','female',default);
+insert into student values (5,'Maha','Khalid','Alotaibi','0537289923','Saudi','Riyadh','female',default);
+
+#update column
+ALTER TABLE cv
+MODIFY COLUMN languages varchar(50);
+
+insert into cv values (1,'bachelors','2 years experience in java programming','communication, problem solving','English: intermediate',
+                       'interduce to java by SATR',1);
+insert into cv values (2,'diploma','2 years experience in paython programming','management, problem solving','English: Advance',
+                       'interduce to Paython by SATR',2);
+insert into cv values (3,'high','no experience','Teamwork','English: beginner','no training certificate',3);
+insert into cv values (4,'primary','','','','',4);
+insert into cv values (5,'masters','3 years in machine learning','Teamwork, time management','English: advanced',
+                       'machine learning',5);
+
+insert into instructor values (1,'Ahmed','Ali','Alshaikh','0556783645','male',3,'Machine learning');
+insert into instructor values (2,'Abdullah','Khalid','Almutairy','0546382746','male',2,'Java');
+insert into instructor values (3,'Nasser','Hussam','Abdullah','0534785632','male',4,'Python');
+insert into instructor values (4,'Rawan','Abdulmjed','Mohammed','0565243897','female',2,'AI');
+insert into instructor values (5,'Hanouf','Abdullah','Alamri','0506273645','female',3,'Block Chain');
+
+insert into class_room values (1,'A',0,1,20);
+insert into class_room values (2,'C',1,1,25);
+insert into class_room values (3,'B',1,2,20);
+insert into class_room values (4,'A',1,1,20);
+insert into class_room values (5,'B',0,1,28);
+
+ALTER TABLE bootcamps_courses
+MODIFY COLUMN requirement varchar(100);
+
+#Activate students accounts
+update student set student.account_State='active';
+
+insert into bootcamps_courses values (1,'Riyadh','2 weeks',30,'19:00:00','22:00:00','2024-08-14','2024-08-29',
+        'Saudi nationality, bring laptop, bachelors degree',
+        'It aims to create a platform for Blockchain technology with memorable real-world applications',5,5,5);
+
+insert into bootcamps_courses values
+        (2,'Riyadh','12 weeks',300,'10:00:00','15:00:00','2024-09-20','2025-12-19',
+        'Saudi nationality, bring laptop, bachelors degree in technical',
+        'The camp aims to learn programming methods and think like a programmer in approaching problem solving in by python language and django frame work.'
+             ,1,2,5);
+
+insert into bootcamps_courses values
+        (3,'Riyadh','12 weeks',300,'10:00:00','15:00:00','2024-10-13','2025-01-02',
+        'Saudi nationality, bring laptop, bachelors degree in technical',
+        'The camp aims to learn about programming in the Java language at the first and second levels,and springboot and database.'
+             ,2,3,3);
+
+insert into bootcamps_courses values
+        (4,'Riyadh','8 weeks',200,'16:00:00','21:00:00','2024-09-01','2024-10-24',
+        'Saudi nationality,must be joined in (TAQAT), bring laptop, bachelors degree in technical',
+        'The camp aims to introduce participants to comprehensive concepts related to the science of artificial intelligence.'
+             ,4,2,4);
+
+insert into bootcamps_courses values
+        (5,'Riyadh','1 week',15,'18:00:00','21:00:00','2024-08-18','2024-08-22',
+        'Saudi nationality,must be joined in (TAQAT), bring laptop, bachelors degree in technical',
+        'Embark on a transformational journey through the complexities of the Software Development Life Cycle (SDLC) in the SCRUM framework..'
+             ,null,null,null);
+
+
+
